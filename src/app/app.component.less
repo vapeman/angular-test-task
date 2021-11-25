@@ -1,0 +1,24 @@
+@import (reference) "./../styles";
+.app {
+  .full-sized();
+  .flex-column-center();
+  background-color: @background-color;
+  color: @font-color;
+}
+.message {
+  .rounded();
+  .flex-column-center();
+  background-color: @base-background-color;
+  padding: 15px;
+  font-size: 24px;
+  .message--string--big, .message--string--small {
+    text-align: center;
+    vertical-align: center;
+  }
+}
+.message--string--big {
+  font-size: 24px;
+}
+.message--string--small {
+  font-size: 16px;
+}
