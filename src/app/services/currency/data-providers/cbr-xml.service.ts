@@ -56,7 +56,7 @@ export class CbrXmlService {
     return this.xmlParserService.xmlToJson(xml);
   }
   private formatData(data: InputData): Currencies {
-    let quotes: Currency = {};
+    let quotes: {[currencyCode: string]: Currency} = {};
     for(const currency of data.ValCurs.Valute) {
       Object.assign(quotes, {
         [currency.CharCode]: {

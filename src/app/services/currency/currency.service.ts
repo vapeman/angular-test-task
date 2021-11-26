@@ -8,20 +8,20 @@ import { CbrXmlService } from "./data-providers/cbr-xml.service";
 
 
 export interface Currency {
-  [currencyCode: string]: {
-    charCode: string
-    name: string
-    nominal: number
-    value: number
-    previousValue: number | null
-  }
+  charCode: string
+  name: string
+  nominal: number
+  value: number
+  previousValue: number | null
 }
 export interface Currencies {
   sourceUrl: string
   timestamp: number
   previousTimestamp: number | null
   base: string
-  quotes: Currency
+  quotes: {
+    [currencyCode: string]: Currency
+  }
 }
 
 type CurrencyGetter = () => Observable<Currencies>;

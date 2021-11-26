@@ -45,7 +45,7 @@ export class CbrJsonService {
   }
 
   private formatData(data: InputData): Currencies {
-    let quotes: Currency = {};
+    let quotes: {[currencyCode: string]: Currency} = {};
     for (const key in data.Valute) {
       Object.assign(quotes, {
         [key]: {
