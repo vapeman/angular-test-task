@@ -7,7 +7,7 @@
   <div class="content--currency-value--container">
     <div class="currency-value--value">Курс:<span>{{currencyValue}}</span></div>
     <div class="currency-value--direction--container">
-      <div class="currency-value--direction" [title]="'Предыдущий курс: ' + currencyPreviousValue === null ? 'неизвестно' : currencyPreviousValue"
+      <div class="currency-value--direction" [title]="currencyPreviousValueTitle"
            [class]="{
               'currency-value--direction--growing': currencyValueIsGrowing === true,
               'currency-value--direction--falling': currencyValueIsGrowing === false,
