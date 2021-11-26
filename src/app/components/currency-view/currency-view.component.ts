@@ -29,6 +29,13 @@ export class CurrencyViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCurrency();
+    this.startPolling();
+  }
+
+  private startPolling() {
+    this.currencyService.polling(10000).subscribe({
+      next: (data) => {this.onDataUpdated(data);}
+    });
   }
 
   private getCurrency() {
@@ -45,8 +52,6 @@ export class CurrencyViewComponent implements OnInit {
     }
     this.data = data;
     const currency = this.extractCurrency(this.currencyCharCode);
-    console.log(this.currencyValue, this.currencyPreviousValue);
-    // console.log(quote);
     if(currency === null) {
       this.error = true;
       this.message = 'Валюта с буквенным кодом "' + this.currencyCharCode + '" отсутствует в загруженных данных';

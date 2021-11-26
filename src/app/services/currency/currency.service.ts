@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable, onErrorResumeNext, of } from "rxjs";
+import { Observable, onErrorResumeNext, of, interval } from "rxjs";
 import { first, catchError } from "rxjs/operators";
 
 import { CbrJsonService } from "./data-providers/cbr-json.service";
@@ -41,6 +41,20 @@ export class CurrencyService {
     this.cbrXmlService.getData.bind(this.cbrXmlService),
     this.cbrJsonService.getData.bind(this.cbrJsonService),
   ]
+
+  public polling(intervalValue: number): Observable<Currencies | null> {
+    return new Observable<Currencies | null>(subscriber => {
+      interval(intervalValue).subscribe({
+        next: () => {
+          this.getData().subscribe(
+            (data) => {
+              subscriber.next(data);
+            }
+          );
+        }
+      });
+    })
+  }
 
   public getData(): Observable<Currencies | null> {
     // this.cbrXmlService.getData().subscribe(result => {console.log(result)});
