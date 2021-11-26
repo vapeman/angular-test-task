@@ -34,17 +34,26 @@ export class CurrencyViewComponent implements OnInit {
 
   private startPolling() {
     this.currencyService.polling(10000).subscribe({
-      next: (data) => {this.onDataUpdated(data);}
+      next: (data) => {
+        if(typeof data === 'string') {
+          this.updating = true;
+          this.message = 'Обновление курса...';
+        }
+        else
+          this.onDataUpdated(data);
+      }
     });
   }
 
   private getCurrency() {
+    this.updating = true;
     this.currencyService.getData().subscribe({
       next: (data) => {this.onDataUpdated(data);}
     });
   }
 
   private onDataUpdated(data: Currencies | null) {
+    this.updating = false;
     if(data === null) {
       this.error = true;
       this.message = 'Не удалось загрузить данные ни из одного источника';
@@ -66,7 +75,7 @@ export class CurrencyViewComponent implements OnInit {
     this.currencyName = currency.name;
     this.currencyTimestamp = data.timestamp;
     this.updateCurrencyValueChanging();
-    this.message = 'Обновление котировок: ' + new Date(this.currencyTimestamp).toLocaleString();
+    this.message = 'Дата обновления: ' + new Date(this.currencyTimestamp).toLocaleString();
   }
 
   private extractCurrency(currencyCharCode: string): Currency | null {

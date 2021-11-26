@@ -42,10 +42,11 @@ export class CurrencyService {
     this.cbrJsonService.getData.bind(this.cbrJsonService),
   ]
 
-  public polling(intervalValue: number): Observable<Currencies | null> {
-    return new Observable<Currencies | null>(subscriber => {
+  public polling(intervalValue: number): Observable<Currencies | null | string> {
+    return new Observable<Currencies | null | string>(subscriber => {
       interval(intervalValue).subscribe({
         next: () => {
+          subscriber.next('update');
           this.getData().subscribe(
             (data) => {
               subscriber.next(data);
