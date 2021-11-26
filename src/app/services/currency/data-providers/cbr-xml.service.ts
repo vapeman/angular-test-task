@@ -44,10 +44,9 @@ export class CbrXmlService {
         next: (data) => {
           const obj: InputData = this.parseData(data) as InputData;
           const formattedData: Currencies = this.formatData(obj);
-          console.log(formattedData);
           subscriber.next(formattedData);
         },
-        error: (msg) => {console.error(msg);}
+        error: (msg) => {subscriber.error(msg);}
       });
     });
   }
