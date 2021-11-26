@@ -1,1 +1,29 @@
-<p>currency-view works!</p>
+<div class="container"> <div class="content--wrapper"> <div class="content">
+  <div class="content--currency-info--container">
+    <div class="currency-info--code">{{currencyCharCode}}</div>
+    <div class="currency-info--name">{{currencyName}}</div>
+  </div>
+  <hr>
+  <div class="content--currency-value--container">
+    <div class="currency-value--value">Курс:<span>{{currencyValue}}</span></div>
+    <div class="currency-value--direction--container">
+      <div class="currency-value--direction" [title]="'Предыдущий курс: ' + currencyPreviousValue === null ? 'неизвестно' : currencyPreviousValue"
+           [class]="{
+              'currency-value--direction--growing': currencyValueIsGrowing === true,
+              'currency-value--direction--falling': currencyValueIsGrowing === false,
+              'currency-value--direction--same':  currencyValueIsGrowing === null,
+              'currency-value--direction--unknown': currencyValueIsGrowing === undefined
+            }"
+      ></div>
+    </div>
+  </div>
+  <hr>
+  <div class="content--service-info--container">
+    <div class="service-info--loader--container">
+      <div class="lds-dual-ring" *ngIf="updating"></div>
+    </div>
+    <div class="service-info--message--container">
+      <span class="service-info--message">{{message}}</span>
+    </div>
+  </div>
+</div> </div> </div>

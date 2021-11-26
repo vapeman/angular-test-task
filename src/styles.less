@@ -2,8 +2,12 @@
 @font-color: #c2c2c2;
 @border-radius: 5px;
 @base-background-color: #222;
+@base-size: 1vmin;
 .rounded {
   border-radius: 5px;
+}
+.shadowed {
+  box-shadow: #00000055 0 0 10px;
 }
 .full-sized {
   width: 100%;
@@ -13,6 +17,18 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+}
+.flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex-row-left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: center;
 }
 body, html {
