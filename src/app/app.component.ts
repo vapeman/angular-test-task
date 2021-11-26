@@ -12,10 +12,10 @@ import { animate, style, transition, trigger } from "@angular/animations";
       // transition('transparent <=> notTransparent', animate('0.9s ease')),
       transition('void => *', [
         style({opacity: 0, filter: 'blur(5px)'}),
-        animate('.7s', style({opacity: 1, filter: 'none'}))
+        animate('.3s', style({opacity: 1, filter: 'none'}))
       ]),
       transition('* => void', [
-        animate('.7s', style({opacity: 0, filter: 'blur(5px)'}))
+        animate('.3s', style({opacity: 0, filter: 'blur(5px)'}))
       ]),
     ]),
   ],
