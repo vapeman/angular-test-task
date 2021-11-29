@@ -14,7 +14,6 @@ export class CurrencySourcesListViewComponent implements OnInit {
     this.filteredSources = [...list].sort((a: SourceInfo, b: SourceInfo) => {
       return a.index - b.index;
     });
-    console.log(list, this.filteredSources);
   }
   @Output() closeEvent = new EventEmitter<void>();
 
@@ -25,7 +24,6 @@ export class CurrencySourcesListViewComponent implements OnInit {
   private filteredSources: SourceInfo[] = []
 
   ngOnInit(): void {
-    console.log(this.sources);
   }
 
   public onCloseButtonClicked() {
