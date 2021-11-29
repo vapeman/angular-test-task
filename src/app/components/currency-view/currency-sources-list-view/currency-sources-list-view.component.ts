@@ -10,10 +10,22 @@ export class CurrencySourcesListViewComponent implements OnInit {
 
   constructor() { }
 
-  @Input() sources: SourceInfo[] = []
+  @Input() set sources(list: SourceInfo[]) {
+    this.filteredSources = [...list].sort((a: SourceInfo, b: SourceInfo) => {
+      return a.index - b.index;
+    });
+    console.log(list, this.filteredSources);
+  }
   @Output() closeEvent = new EventEmitter<void>();
 
+
+  public get sources(): SourceInfo[] {
+    return this.filteredSources;
+  }
+  private filteredSources: SourceInfo[] = []
+
   ngOnInit(): void {
+    console.log(this.sources);
   }
 
   public onCloseButtonClicked() {

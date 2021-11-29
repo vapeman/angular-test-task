@@ -44,7 +44,7 @@ export class CurrencyViewComponent implements OnInit {
   public sourceName: string = ''
   public sourceUrl: string = ''
 
-  public showSourceList: boolean = true
+  public showSourceList: boolean = false
   public sourceList: SourceInfo[] = []
 
   private currencyPollingSubscription: Subscription | null = null
@@ -52,6 +52,7 @@ export class CurrencyViewComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.sourceList = this.currencyService.dataSources;
     this.startPolling();
   }
 
@@ -62,7 +63,11 @@ export class CurrencyViewComponent implements OnInit {
       this.startPolling();
   }
 
-  public onCloseCurrencySourceList() {
+  public onOpenCurrencySourcesList() {
+    this.showSourceList = true;
+  }
+
+  public onCloseCurrencySourcesList() {
     this.showSourceList = false;
   }
 

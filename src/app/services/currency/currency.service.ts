@@ -1,4 +1,4 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 import { Observable, onErrorResumeNext, of, interval } from "rxjs";
 import { first, catchError } from "rxjs/operators";
@@ -38,12 +38,14 @@ interface CurrencyDataProvider {
 @Injectable({
   providedIn: 'root'
 })
-export class CurrencyService implements OnInit{
+export class CurrencyService {
 
   constructor(
     private cbrJsonService: CbrJsonService,
     private cbrXmlService: CbrXmlService,
-  ) { }
+  ) {
+    this.onInit();
+  }
 
   private readonly dataProviders: CurrencyDataProvider[] = [
     this.cbrXmlService,
@@ -55,11 +57,10 @@ export class CurrencyService implements OnInit{
     return this._dataSources;
   }
 
-  public ngOnInit() {
-    let priority = this.dataProviders.length;
+  private onInit() {
     for(let i: number = 0; i < this.dataProviders.length; i += 1) {
       let sourceInfo = this.dataProviders[i].getInfo();
-      sourceInfo.index = priority;
+      sourceInfo.index = i;
       this._dataSources.push(sourceInfo);
     }
   }

@@ -2,13 +2,21 @@
   <app-currency-sources-list-view
     @fadeScaleInOutAnimation
     *ngIf="showSourceList"
-    (closeEvent)="onCloseCurrencySourceList()"
+    [sources]="sourceList"
+    (closeEvent)="onCloseCurrencySourcesList()"
   ></app-currency-sources-list-view>
   <div class="content--wrapper">
     <div class="content">
       <div class="content--currency-info--container">
         <div class="currency-info--code">{{currencyCharCode}}</div>
         <div class="currency-info--name">{{currencyName}}</div>
+        <div
+          class="currency-info--settings-button"
+          title="Источники котировок"
+          (click)="onOpenCurrencySourcesList()"
+        >
+          <div></div> <div></div> <div></div>
+        </div>
       </div>
       <hr>
       <div class="content--currency-value--container">

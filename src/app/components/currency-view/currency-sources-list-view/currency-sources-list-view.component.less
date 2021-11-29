@@ -3,7 +3,7 @@
 @local-size-unit: @base-size;
 @base-height: @local-size-unit*3;
 @title--font-size: @local-size-unit*2.5;
-@list-item--font-size: @local-size-unit*1.5;
+@list-item--font-size: @local-size-unit*1.25;
 
 .container {
   position: absolute;
@@ -24,19 +24,20 @@
 }
 .header {
   .flex-row-left();
-  margin-top: @base-height*.5;
+  margin-top: @local-size-unit*2;
+  margin-bottom: @local-size-unit*2;
 }
 .header--title {
   flex-grow: 1;
   font-size: @title--font-size;
-  margin-left: @base-height*.5;
+  margin-left: @local-size-unit*2;
 }
 @close-button--size: @base-height*.75;
 .header--close-button {
   position: relative;
   height: @close-button--size;
   width: @close-button--size;
-  margin-right: @base-height*.5;
+  margin-right: @local-size-unit*2;
   border-radius: @close-button--size*.5;
   border: @local-size-unit*.1 solid @color--dark;
   background-color: transparent;
@@ -46,7 +47,7 @@
 .header--close-button:hover {
   border-color: @color--blue;
   .header--close-button--left, .header--close-button--right {
-    background-color: @color--blue;
+    background-color: @color--red;
   }
 }
 .header--close-button:active {
@@ -81,16 +82,40 @@
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  .flex-column-left();
 }
 .currency-source-list--item {
   height: @local-size-unit*5;
+  font-size: @list-item--font-size;
+  border-top: @local-size-unit*.1 solid @color--gray;
+  .flex-row-left();
+  width: 100%;
+}
+.currency-source-list--item:last-child {
+  border-bottom: @local-size-unit*.1 solid @color--gray;
+}
+.item--name {
+  width: 30%;
+  text-wrap: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: @local-size-unit*2;
+}
+.item--url {
+  flex-grow: 1;
+  text-wrap: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .item--button--container {
+  width: @local-size-unit*3;
+  margin-right: @local-size-unit*2;
   .flex-column-center();
 }
-.item--button--up {}
-.item--button--down {}
+.item--button--move-up {}
+.item--button--move-down {}
 .footer {
   .flex-row-right();
+  margin-bottom: @local-size-unit*2;
 }
 .footer--apply-button {}

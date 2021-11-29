@@ -39,7 +39,7 @@ hr {
   }
 }
 .content--currency-info--container {
-  .flex-row-space-between();
+  .flex-row-left();
   //margin-bottom: @local-size-unit;
 }
 .currency-info--code {
@@ -48,7 +48,31 @@ hr {
   margin-right: @local-size-unit*3;
 }
 .currency-info--name {
+  flex-grow: 1;
+  text-align: right;
   font-size: @font-size-mid;
+}
+.currency-info--settings-button {
+  .flex-column-center();
+  cursor: pointer;
+  margin-left: @local-size-unit*2;
+  height: 100%;
+  //width: @local-size-unit*2;
+  div { //div:nth-child(1), div:nth-child(2), div:nth-child(3) {
+    margin: @local-size-unit*.25;
+    width: @local-size-unit*.3;
+    height: @local-size-unit*.3;
+    border-radius: 50%;
+    background-color: @color--gray;
+  }
+}
+.currency-info--settings-button:hover {
+  div {
+    background-color: @color--light-blue;
+  }
+}
+.currency-info--settings-button:active {
+  opacity: .75;
 }
 
 .content--currency-value--container {
@@ -123,7 +147,8 @@ hr {
   outline: none;
   width: 0;
   height: 0;
-  border: @button-size*.5 solid transparent
+  border: @button-size*.5 solid transparent;
+  cursor: pointer;
 }
 .service-info--polling-button:hover {
   opacity: .7;
