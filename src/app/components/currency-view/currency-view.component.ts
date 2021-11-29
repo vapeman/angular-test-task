@@ -19,6 +19,7 @@ export class CurrencyViewComponent implements OnInit {
   public currencyName: string = ''
   public currencyValue: number | null = null
   public currencyPreviousValue: number | null = null
+  public currencyNominal: number = 1
   public currencyValueIsGrowing: boolean | null | undefined = undefined; /* true -- growing, false -- falling,
                                                                             null -- same, undefined -- unknown */
   public currencyPreviousValueTitle: string = ''
@@ -26,6 +27,10 @@ export class CurrencyViewComponent implements OnInit {
   public message: string = ''
 
   private data: Currencies | undefined = undefined
+  public valueUpdatedAt: string = '---'
+  public dataUpdatedAt: string = '---'
+  public sourceName: string = ''
+  public sourceUrl: string = ''
 
   private currencyPollingSubscription: Subscription | null = null
   public currencyPollingIsActive: boolean = false
@@ -69,6 +74,7 @@ export class CurrencyViewComponent implements OnInit {
 
   private getCurrency() {
     this.updating = true;
+    this.message = 'Обновление курса...';
     this.currencyService.getData().subscribe({
       next: (data) => {this.onDataUpdated(data);}
     });
@@ -76,6 +82,7 @@ export class CurrencyViewComponent implements OnInit {
 
   private onDataUpdated(data: Currencies | null) {
     this.updating = false;
+    this.message = '';
     if(data === null) {
       this.error = true;
       this.message = 'Не удалось загрузить данные ни из одного источника';
@@ -88,16 +95,22 @@ export class CurrencyViewComponent implements OnInit {
       this.message = 'Валюта "' + this.currencyCharCode + '" отсутствует в загруженных данных';
       return ;
     }
-    if(currency.previousValue === null)
-      if(this.currencyValue !== null)
+    if(currency.previousValue === null) {
+      if(this.currencyTimestamp !== 0 && this.currencyTimestamp < data.timestamp)
         this.currencyPreviousValue = this.currencyValue;
-    this.currencyValue = currency.value;
-    if(currency.previousValue !== null)
+      // if (this.currencyValue !== null)
+    } else {
       this.currencyPreviousValue = currency.previousValue;
+    }
+    this.currencyValue = currency.value;
+    this.currencyNominal = currency.nominal;
+    this.dataUpdatedAt = new Date().toLocaleString();
+    this.valueUpdatedAt = new Date(this.currencyTimestamp).toLocaleString();
     this.currencyName = currency.name;
     this.currencyTimestamp = data.timestamp;
+    this.sourceName = data.sourceName;
+    this.sourceUrl = data.sourceUrl;
     this.updateCurrencyValueChanging();
-    this.message = 'Обновление котировок: ' + new Date(this.currencyTimestamp).toLocaleString();
   }
 
   private extractCurrency(currencyCharCode: string): Currency | null {

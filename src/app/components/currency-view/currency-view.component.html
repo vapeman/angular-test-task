@@ -23,7 +23,12 @@
       <div class="lds-dual-ring" *ngIf="updating"></div>
     </div>
     <div class="service-info--message--container">
-      <span class="service-info--message">{{message}}</span>
+      <span class="service-info--message" [class]="{'service-info--message--error': error}">{{message}}</span>
+      <span class="service-info--message">Обновление котировок: {{valueUpdatedAt}}</span>
+      <span class="service-info--message">Обновление данных: {{dataUpdatedAt}}</span>
+      <span class="service-info--message">
+        Источник: <a class="service-info--message" [href]="sourceUrl">{{sourceName}}</a>
+      </span>
     </div>
     <div class="service-info--polling-button--container">
       <button

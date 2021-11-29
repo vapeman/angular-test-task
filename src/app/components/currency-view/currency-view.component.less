@@ -7,8 +7,9 @@
 
 hr {
   width: 100%;
-  height: @local-size-unit*.05;
+  height: @local-size-unit*.1;
   border: none;
+  outline: none;
   background-color: #444;
   margin-top: @local-size-unit*2;
   margin-bottom: @local-size-unit*2;
@@ -100,9 +101,17 @@ hr {
   height: 2*@local-size-unit;
 }
 .service-info--message--container {
+  .flex-column-left();
 }
 .service-info--message {
   font-size: @font-size-small;
+  height: @font-size-small;
+}
+//.service-info--message:empty {
+//  display: none;
+//}
+.service-info--message--error {
+  color: @color--red;
 }
 .service-info--polling-button--container {
   flex-grow: 1;
