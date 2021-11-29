@@ -129,9 +129,9 @@ export class CurrencyViewComponent implements OnInit {
     this.currencyValue = currency.value;
     this.currencyNominal = currency.nominal;
     this.dataUpdatedAt = new Date().toLocaleString();
+    this.currencyTimestamp = data.timestamp;
     this.valueUpdatedAt = new Date(this.currencyTimestamp).toLocaleString();
     this.currencyName = currency.name;
-    this.currencyTimestamp = data.timestamp;
     this.sourceName = data.sourceName;
     this.sourceUrl = data.sourceUrl;
     this.updateCurrencyValueChanging();
