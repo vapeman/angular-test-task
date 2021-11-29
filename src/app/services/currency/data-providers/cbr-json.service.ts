@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 
 import { Observable } from "rxjs";
 
-import { Currencies, Currency } from "../currency.service";
+import { Currencies, Currency, SourceInfo } from "../currency.service";
 
 
 interface QuoteObject {
@@ -34,6 +34,11 @@ export class CbrJsonService {
   constructor(private http: HttpClient) { }
 
   private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_json.js";
+  private readonly sourceName: string = "CBR-DAILY-JSON";
+
+  public getInfo(): SourceInfo {
+    return {name: this.sourceName, url: this.sourceUrl}
+  }
 
   public getData(): Observable<Currencies> {
     return new Observable<Currencies>(subscriber => {
@@ -59,6 +64,7 @@ export class CbrJsonService {
     }
     return {
       sourceUrl: this.sourceUrl,
+      sourceName: this.sourceName,
       timestamp: Date.parse(data.Date),
       previousTimestamp: Date.parse(data.PreviousDate),
       base: 'RUB',

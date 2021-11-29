@@ -16,6 +16,7 @@ export interface Currency {
 }
 export interface Currencies {
   sourceUrl: string
+  sourceName: string
   timestamp: number
   previousTimestamp: number | null
   base: string
@@ -23,8 +24,14 @@ export interface Currencies {
     [currencyCode: string]: Currency
   }
 }
-
-type CurrencyGetter = () => Observable<Currencies>;
+export interface SourceInfo {
+  name: string
+  url: string
+}
+interface CurrencyDataProvider {
+  getData: () => Observable<Currencies>
+  getInfo: () => SourceInfo
+}
 
 
 @Injectable({
@@ -37,10 +44,17 @@ export class CurrencyService {
     private cbrXmlService: CbrXmlService,
   ) { }
 
-  private readonly getters: CurrencyGetter[] = [
-    this.cbrXmlService.getData.bind(this.cbrXmlService),
-    this.cbrJsonService.getData.bind(this.cbrJsonService),
+  private readonly dataProviders: CurrencyDataProvider[] = [
+    this.cbrXmlService,
+    this.cbrJsonService,
   ]
+
+  public getSourcesInfo(): SourceInfo[] {
+    let res: SourceInfo[] = [];
+    for(let dataProviderService of this.dataProviders)
+      res.push(dataProviderService.getInfo());
+    return res;
+  }
 
   public polling(intervalValue: number): Observable<Currencies | null | string> {
     return new Observable<Currencies | null | string>(subscriber => {
@@ -59,7 +73,7 @@ export class CurrencyService {
 
   public getData(): Observable<Currencies | null> {
     // this.cbrXmlService.getData().subscribe(result => {console.log(result)});
-    return onErrorResumeNext(...this.getters.map(getter => getter())).pipe(
+    return onErrorResumeNext(...this.dataProviders.map(dataProviderService => dataProviderService.getData())).pipe(
       first(),
       catchError(err => {
         console.error(err);

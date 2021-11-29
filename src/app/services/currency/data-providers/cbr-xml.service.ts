@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { NgxXml2jsonService } from "ngx-xml2json";
 
-import { Currencies, Currency } from "../currency.service";
+import { Currencies, Currency, SourceInfo } from "../currency.service";
 
 
 interface Valute {
@@ -37,6 +37,11 @@ export class CbrXmlService {
   constructor(private http: HttpClient, private xmlParserService: NgxXml2jsonService) { }
 
   private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
+  private readonly sourceName: string = "CBR-DAILY-XML";
+
+  public getInfo(): SourceInfo {
+    return {name: this.sourceName, url: this.sourceUrl}
+  }
 
   public getData(): Observable<Currencies> {
     return new Observable<Currencies>(subscriber => {
@@ -74,6 +79,7 @@ export class CbrXmlService {
                           parseInt(dateParts[0], 10));
     return {
       sourceUrl: this.sourceUrl,
+      sourceName: this.sourceName,
       timestamp: date.getTime(),
       previousTimestamp: null,
       base: 'RUB',
