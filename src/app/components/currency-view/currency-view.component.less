@@ -71,11 +71,11 @@ hr {
   border: @local-size-unit*.7 solid transparent;
 }
 .currency-value--direction--growing {
-  border-bottom: @local-size-unit solid #47BC9B;
+  border-bottom: @local-size-unit solid @color--green;
   margin-top: -@local-size-unit;
 }
 .currency-value--direction--falling {
-  border-top: @local-size-unit solid #C13839;
+  border-top: @local-size-unit solid @color--red;
   margin-bottom: -@local-size-unit;
 }
 .currency-value--direction--same {
@@ -104,9 +104,36 @@ hr {
 .service-info--message {
   font-size: @font-size-small;
 }
+.service-info--polling-button--container {
+  flex-grow: 1;
+  .flex-row-right();
+}
+@button-size: @local-size-unit*1.25;
+.service-info--polling-button {
+  outline: none;
+  width: 0;
+  height: 0;
+  border: @button-size*.5 solid transparent
+}
+.service-info--polling-button:hover {
+  opacity: .7;
+}
+.service-info--polling-button:active {
+  opacity: .5;
+}
+.service-info--polling-button--start {
+  background-color: transparent;
+  border-left: @button-size solid @color--green;
+  margin-right: -@button-size;
+}
+.service-info--polling-button--stop {
+  background-color: @color--red;
+  width: @button-size;
+  height: @button-size;
+  border: none;
+}
 
 @loader-size-unit: @local-size-unit*.4;
-
 .lds-dual-ring {
   display: inline-block;
   width: 5*@local-size-unit;

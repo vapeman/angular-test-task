@@ -25,5 +25,16 @@
     <div class="service-info--message--container">
       <span class="service-info--message">{{message}}</span>
     </div>
+    <div class="service-info--polling-button--container">
+      <button
+        class="service-info--polling-button"
+        [class]="{
+          'service-info--polling-button--start': !currencyPollingIsActive,
+          'service-info--polling-button--stop': currencyPollingIsActive
+        }"
+        [title]="currencyPollingIsActive ? 'Остановить обновление' : 'Запустить обновление'"
+        (click)="onPollingButtonClicked()"
+      ></button>
+    </div>
   </div>
 </div> </div> </div>

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import { CurrencyService, Currencies, Currency } from "../../services/currency/currency.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-currency-view',
@@ -22,18 +23,31 @@ export class CurrencyViewComponent implements OnInit {
                                                                             null -- same, undefined -- unknown */
   public currencyPreviousValueTitle: string = ''
   public currencyTimestamp: number = 0
-  public message: string = 'Обновление курса...'
+  public message: string = ''
 
   private data: Currencies | undefined = undefined
 
+  private currencyPollingSubscription: Subscription | null = null
+  public currencyPollingIsActive: boolean = false
+
 
   ngOnInit(): void {
-    this.getCurrency();
     this.startPolling();
   }
 
+  public onPollingButtonClicked() {
+    if(this.currencyPollingIsActive)
+      this.stopPolling();
+    else
+      this.startPolling();
+  }
+
   private startPolling() {
-    this.currencyService.polling(10000).subscribe({
+    if(this.currencyPollingSubscription !== null)
+      return ;
+    this.getCurrency();
+    this.currencyPollingIsActive = true;
+    this.currencyPollingSubscription = this.currencyService.polling(10000).subscribe({
       next: (data) => {
         if(typeof data === 'string') {
           this.updating = true;
@@ -43,6 +57,14 @@ export class CurrencyViewComponent implements OnInit {
           this.onDataUpdated(data);
       }
     });
+  }
+
+  private stopPolling() {
+    if(this.currencyPollingSubscription === null)
+      return ;
+    this.currencyPollingSubscription.unsubscribe();
+    this.currencyPollingIsActive = false;
+    this.currencyPollingSubscription = null;
   }
 
   private getCurrency() {
@@ -63,7 +85,7 @@ export class CurrencyViewComponent implements OnInit {
     const currency = this.extractCurrency(this.currencyCharCode);
     if(currency === null) {
       this.error = true;
-      this.message = 'Валюта с буквенным кодом "' + this.currencyCharCode + '" отсутствует в загруженных данных';
+      this.message = 'Валюта "' + this.currencyCharCode + '" отсутствует в загруженных данных';
       return ;
     }
     if(currency.previousValue === null)
@@ -75,7 +97,7 @@ export class CurrencyViewComponent implements OnInit {
     this.currencyName = currency.name;
     this.currencyTimestamp = data.timestamp;
     this.updateCurrencyValueChanging();
-    this.message = 'Дата обновления: ' + new Date(this.currencyTimestamp).toLocaleString();
+    this.message = 'Обновление котировок: ' + new Date(this.currencyTimestamp).toLocaleString();
   }
 
   private extractCurrency(currencyCharCode: string): Currency | null {
