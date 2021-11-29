@@ -37,7 +37,7 @@ export class CbrJsonService {
   private readonly sourceName: string = "CBR-DAILY-JSON";
 
   public getInfo(): SourceInfo {
-    return {name: this.sourceName, url: this.sourceUrl}
+    return {name: this.sourceName, url: this.sourceUrl, index: 0}
   }
 
   public getData(): Observable<Currencies> {

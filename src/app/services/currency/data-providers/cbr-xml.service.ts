@@ -40,7 +40,7 @@ export class CbrXmlService {
   private readonly sourceName: string = "CBR-DAILY-XML";
 
   public getInfo(): SourceInfo {
-    return {name: this.sourceName, url: this.sourceUrl}
+    return {name: this.sourceName, url: this.sourceUrl, index: 0}
   }
 
   public getData(): Observable<Currencies> {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 
 import { Observable, onErrorResumeNext, of, interval } from "rxjs";
 import { first, catchError } from "rxjs/operators";
@@ -27,6 +27,7 @@ export interface Currencies {
 export interface SourceInfo {
   name: string
   url: string
+  index: number
 }
 interface CurrencyDataProvider {
   getData: () => Observable<Currencies>
@@ -37,7 +38,7 @@ interface CurrencyDataProvider {
 @Injectable({
   providedIn: 'root'
 })
-export class CurrencyService {
+export class CurrencyService implements OnInit{
 
   constructor(
     private cbrJsonService: CbrJsonService,
@@ -48,12 +49,23 @@ export class CurrencyService {
     this.cbrXmlService,
     this.cbrJsonService,
   ]
+  private _dataSources: SourceInfo[] = []
 
-  public getSourcesInfo(): SourceInfo[] {
-    let res: SourceInfo[] = [];
-    for(let dataProviderService of this.dataProviders)
-      res.push(dataProviderService.getInfo());
-    return res;
+  public get dataSources() {
+    return this._dataSources;
+  }
+
+  public ngOnInit() {
+    let priority = this.dataProviders.length;
+    for(let i: number = 0; i < this.dataProviders.length; i += 1) {
+      let sourceInfo = this.dataProviders[i].getInfo();
+      sourceInfo.index = priority;
+      this._dataSources.push(sourceInfo);
+    }
+  }
+
+  public setPollingOrder(sources: SourceInfo[]): boolean {
+    return false;
   }
 
   public polling(intervalValue: number): Observable<Currencies | null | string> {

@@ -1,12 +1,24 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { CurrencyService, Currencies, Currency } from "../../services/currency/currency.service";
+import { CurrencyService, Currencies, Currency, SourceInfo } from "../../services/currency/currency.service";
 import { Subscription } from "rxjs";
+import {animate, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-currency-view',
   templateUrl: './currency-view.component.html',
-  styleUrls: ['./currency-view.component.less']
+  styleUrls: ['./currency-view.component.less'],
+  animations: [
+    trigger('fadeScaleInOutAnimation', [
+      transition('void => *', [
+        style({opacity: 0, transform: 'scale(.1)'}),
+        animate('.3s', style({opacity: 1, transform: 'scale(1)'}))
+      ]),
+      transition('* => void', [
+        animate('.3s', style({opacity: 0, transform: 'scale(.1)'}))
+      ]),
+    ]),
+  ],
 })
 export class CurrencyViewComponent implements OnInit {
 
@@ -32,6 +44,9 @@ export class CurrencyViewComponent implements OnInit {
   public sourceName: string = ''
   public sourceUrl: string = ''
 
+  public showSourceList: boolean = true
+  public sourceList: SourceInfo[] = []
+
   private currencyPollingSubscription: Subscription | null = null
   public currencyPollingIsActive: boolean = false
 
@@ -45,6 +60,10 @@ export class CurrencyViewComponent implements OnInit {
       this.stopPolling();
     else
       this.startPolling();
+  }
+
+  public onCloseCurrencySourceList() {
+    this.showSourceList = false;
   }
 
   private startPolling() {

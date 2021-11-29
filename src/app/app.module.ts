@@ -5,11 +5,13 @@ import { HttpClientModule } from "@angular/common/http";
 
 import { AppComponent } from './app.component';
 import { CurrencyViewComponent } from './components/currency-view/currency-view.component';
+import { CurrencySourcesListViewComponent } from './components/currency-view/currency-sources-list-view/currency-sources-list-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CurrencyViewComponent
+    CurrencyViewComponent,
+    CurrencySourcesListViewComponent
   ],
   imports: [
     BrowserModule,

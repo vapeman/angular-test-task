@@ -1,45 +1,54 @@
-<div class="container"> <div class="content--wrapper"> <div class="content">
-  <div class="content--currency-info--container">
-    <div class="currency-info--code">{{currencyCharCode}}</div>
-    <div class="currency-info--name">{{currencyName}}</div>
-  </div>
-  <hr>
-  <div class="content--currency-value--container">
-    <div class="currency-value--value">Курс:<span>{{currencyValue}}</span></div>
-    <div class="currency-value--direction--container">
-      <div class="currency-value--direction" [title]="currencyPreviousValueTitle"
-           [class]="{
-              'currency-value--direction--growing': currencyValueIsGrowing === true,
-              'currency-value--direction--falling': currencyValueIsGrowing === false,
-              'currency-value--direction--same':  currencyValueIsGrowing === null,
-              'currency-value--direction--unknown': currencyValueIsGrowing === undefined
+<div class="container">
+  <app-currency-sources-list-view
+    @fadeScaleInOutAnimation
+    *ngIf="showSourceList"
+    (closeEvent)="onCloseCurrencySourceList()"
+  ></app-currency-sources-list-view>
+  <div class="content--wrapper">
+    <div class="content">
+      <div class="content--currency-info--container">
+        <div class="currency-info--code">{{currencyCharCode}}</div>
+        <div class="currency-info--name">{{currencyName}}</div>
+      </div>
+      <hr>
+      <div class="content--currency-value--container">
+        <div class="currency-value--value">Курс:<span>{{currencyValue}}</span></div>
+        <div class="currency-value--direction--container">
+          <div class="currency-value--direction" [title]="currencyPreviousValueTitle"
+               [class]="{
+                  'currency-value--direction--growing': currencyValueIsGrowing === true,
+                  'currency-value--direction--falling': currencyValueIsGrowing === false,
+                  'currency-value--direction--same':  currencyValueIsGrowing === null,
+                  'currency-value--direction--unknown': currencyValueIsGrowing === undefined
+                }"
+          ></div>
+        </div>
+      </div>
+      <hr>
+      <div class="content--service-info--container">
+        <div class="service-info--loader--container">
+          <div class="lds-dual-ring" *ngIf="updating"></div>
+        </div>
+        <div class="service-info--message--container">
+          <span class="service-info--message" [class]="{'service-info--message--error': error}">{{message}}</span>
+          <span class="service-info--message">Обновление котировок: {{valueUpdatedAt}}</span>
+          <span class="service-info--message">Обновление данных: {{dataUpdatedAt}}</span>
+          <span class="service-info--message">
+            Источник: <a class="service-info--message" [href]="sourceUrl">{{sourceName}}</a>
+          </span>
+        </div>
+        <div class="service-info--polling-button--container">
+          <button
+            class="service-info--polling-button"
+            [class]="{
+              'service-info--polling-button--start': !currencyPollingIsActive,
+              'service-info--polling-button--stop': currencyPollingIsActive
             }"
-      ></div>
+            [title]="currencyPollingIsActive ? 'Остановить обновление' : 'Запустить обновление'"
+            (click)="onPollingButtonClicked()"
+          ></button>
+        </div>
+      </div>
     </div>
   </div>
-  <hr>
-  <div class="content--service-info--container">
-    <div class="service-info--loader--container">
-      <div class="lds-dual-ring" *ngIf="updating"></div>
-    </div>
-    <div class="service-info--message--container">
-      <span class="service-info--message" [class]="{'service-info--message--error': error}">{{message}}</span>
-      <span class="service-info--message">Обновление котировок: {{valueUpdatedAt}}</span>
-      <span class="service-info--message">Обновление данных: {{dataUpdatedAt}}</span>
-      <span class="service-info--message">
-        Источник: <a class="service-info--message" [href]="sourceUrl">{{sourceName}}</a>
-      </span>
-    </div>
-    <div class="service-info--polling-button--container">
-      <button
-        class="service-info--polling-button"
-        [class]="{
-          'service-info--polling-button--start': !currencyPollingIsActive,
-          'service-info--polling-button--stop': currencyPollingIsActive
-        }"
-        [title]="currencyPollingIsActive ? 'Остановить обновление' : 'Запустить обновление'"
-        (click)="onPollingButtonClicked()"
-      ></button>
-    </div>
-  </div>
-</div> </div> </div>
+</div>
