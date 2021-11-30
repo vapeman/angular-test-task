@@ -7,12 +7,12 @@ import { CurrencyService, SourceInfo } from "../currency/currency.service";
 @Injectable({
   providedIn: 'root'
 })
-export class UserSettingsService {
+export class UserSettingsStorageService {
 
   constructor(
     private storageService: StorageService,
     private currencyService: CurrencyService
-  ) { console.log('UserSettingsService is alive!', this.defaultCurrenciesOrder); }
+  ) { console.log('UserSettingsStorageService is alive!', this.defaultCurrenciesOrder); }
 
   private readonly currenciesOrderKey: string = 'USER__SETTINGS__CURRENCIES_ORDER';
   private readonly pollingStateKey: string = 'USER__SETTINGS__POLLING_STATE';
@@ -32,10 +32,10 @@ export class UserSettingsService {
 
   public setCurrenciesOrder(data: SourceInfo[]): Observable<boolean> {
     return new Observable<boolean>(subscriber => {
-      if(this.currencyService.setPollingOrder(data))
-        subscriber.next(this.storageService.setItem(this.currenciesOrderKey, data));
-      else
-        subscriber.next(false);
+      // if(this.currencyService.setPollingOrder(data))
+      subscriber.next(this.storageService.setItem(this.currenciesOrderKey, data));
+      // else
+      //   subscriber.next(false);
     });
   }
 
