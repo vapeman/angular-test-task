@@ -75,7 +75,9 @@ export class CurrencyViewComponent implements OnInit {
   public onApplyNewCurrencySourcesOrder(data: SourceInfo[]) {
     this.showSourceList = false;
     this.stopPolling();
-    console.log(data);
+    if(!this.currencyService.setPollingOrder(data))
+      console.error('There was an error that shouldn\'t be possible');
+    this.startPolling();
   }
 
   private startPolling() {
@@ -91,7 +93,7 @@ export class CurrencyViewComponent implements OnInit {
         }
         else
           this.onDataUpdated(data);
-      }
+      },
     });
   }
 
@@ -101,6 +103,8 @@ export class CurrencyViewComponent implements OnInit {
     this.currencyPollingSubscription.unsubscribe();
     this.currencyPollingIsActive = false;
     this.currencyPollingSubscription = null;
+    this.currencyTimestamp = 0;
+    this.currencyPreviousValue = null;
   }
 
   private getCurrency() {

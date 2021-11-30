@@ -54,8 +54,6 @@ export class CurrencySourcesListViewComponent implements OnInit {
     firstItem.index = secondItemIndex;
     secondItem.index = firstItemIndex;
     this.updateSortedSources();
-    console.log(JSON.stringify(this._sources))
-    console.log(JSON.stringify(this.sortedSources))
   }
 
   private updateSortedSources() {

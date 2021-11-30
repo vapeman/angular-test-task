@@ -66,7 +66,24 @@ export class CurrencyService {
   }
 
   public setPollingOrder(sources: SourceInfo[]): boolean {
-    return false;
+    if(!this.verifySourcesUpdate(sources))
+      return false;
+    for(let i = 0; i < sources.length; i += 1)
+      this._dataSources[i].index = sources[i].index;
+    return true;
+  }
+
+  private verifySourcesUpdate(sources: SourceInfo[]): boolean {
+    if(this._dataSources.length !== sources.length)
+      return false;
+    for(let i = 0; i < sources.length; i += 1) {
+      if(
+        this._dataSources[i].name !== sources[i].name ||
+        this._dataSources[i].url !== sources[i].url
+      )
+        return false;
+    }
+    return true;
   }
 
   public polling(intervalValue: number): Observable<Currencies | null | string> {
@@ -86,7 +103,10 @@ export class CurrencyService {
 
   public getData(): Observable<Currencies | null> {
     // this.cbrXmlService.getData().subscribe(result => {console.log(result)});
-    return onErrorResumeNext(...this.dataProviders.map(dataProviderService => dataProviderService.getData())).pipe(
+    // return onErrorResumeNext(...this.dataProviders.map(dataProviderService => dataProviderService.getData())).pipe(
+    return onErrorResumeNext(...this._dataSources.map(
+      dataSource => this.dataProviders[dataSource.index].getData())
+    ).pipe(
       first(),
       catchError(err => {
         console.error(err);
