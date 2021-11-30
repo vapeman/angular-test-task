@@ -4,6 +4,7 @@
     *ngIf="showSourceList"
     [sources]="sourceList"
     (closeEvent)="onCloseCurrencySourcesList()"
+    (applyEvent)="onApplyNewCurrencySourcesOrder($event)"
   ></app-currency-sources-list-view>
   <div class="content--wrapper">
     <div class="content">

@@ -64,11 +64,18 @@ export class CurrencyViewComponent implements OnInit {
   }
 
   public onOpenCurrencySourcesList() {
+    this.stopPolling();
     this.showSourceList = true;
   }
 
   public onCloseCurrencySourcesList() {
     this.showSourceList = false;
+  }
+
+  public onApplyNewCurrencySourcesOrder(data: SourceInfo[]) {
+    this.showSourceList = false;
+    this.stopPolling();
+    console.log(data);
   }
 
   private startPolling() {

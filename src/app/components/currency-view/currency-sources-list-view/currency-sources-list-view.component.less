@@ -83,16 +83,34 @@
   overflow-x: hidden;
   overflow-y: auto;
   .flex-column-left();
+  background-color: @base-background-color;
 }
 .currency-source-list--item {
-  height: @local-size-unit*5;
+  min-height: @local-size-unit*4;
+  height: @local-size-unit*4;
   font-size: @list-item--font-size;
   border-top: @local-size-unit*.1 solid @color--gray;
   .flex-row-left();
   width: 100%;
 }
+.currency-source-list--item:first-child {
+  .item--button--container {
+    .flex-column-center();
+    justify-content: flex-end;
+    .item--button--move-up {
+      display: none;
+    }
+  }
+}
 .currency-source-list--item:last-child {
   border-bottom: @local-size-unit*.1 solid @color--gray;
+  .item--button--container {
+    .flex-column-center();
+    justify-content: flex-start;
+    .item--button--move-down {
+      display: none;
+    }
+  }
 }
 .item--name {
   width: 30%;
@@ -104,18 +122,47 @@
 .item--url {
   flex-grow: 1;
   text-wrap: none;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 .item--button--container {
   width: @local-size-unit*3;
+  height: 100%;
   margin-right: @local-size-unit*2;
   .flex-column-center();
+  justify-content: space-between;
 }
-.item--button--move-up {}
-.item--button--move-down {}
+@move-button--size: @local-size-unit*.6;
+.item--button--move {
+  width: 0;
+  height: 0;
+  border: @move-button--size*.7 solid transparent;
+  cursor: pointer;
+}
+.item--button--move:hover {
+  opacity: .75;
+}
+.item--button--move:active {
+  opacity: .5;
+}
+.item--button--move-up {
+  border-bottom: @move-button--size solid @color--gray;
+  //margin-top: -@move-button--size;
+  margin-top: @move-button--size;
+}
+.item--button--move-down {
+  border-top: @move-button--size solid @color--gray;
+  //margin-bottom: -@move-button--size;
+  margin-bottom: @move-button--size;
+}
 .footer {
   .flex-row-right();
   margin-bottom: @local-size-unit*2;
+  button {
+    margin-right: @local-size-unit*2;
+    margin-top: @local-size-unit;
+    padding:0 @local-size-unit 0 @local-size-unit;
+  }
 }
 .footer--apply-button {}

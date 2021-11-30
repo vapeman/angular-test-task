@@ -7,11 +7,24 @@
     </div>
   </div>
   <div class="currency-sources-list">
-    <div class="currency-source-list--item" *ngFor="let source of sources">
-      <div class="item--name">{{source.name}}</div>
-      <div class="item--url">{{source.url}}</div>
-      <div class="item--button--container"></div>
+    <div class="currency-source-list--item" *ngFor="let source of sortedSources">
+      <label class="item--name">{{source.name}}</label>
+      <a class="item--url" [href]="source.url">{{source.url}}</a>
+      <div class="item--button--container">
+        <div
+          class="item--button--move item--button--move-up"
+          (click)="onItemMoveUpClicked(source.index)"
+          title="Переместить вверх"
+        ></div>
+        <div
+          class="item--button--move item--button--move-down"
+          (click)="onItemMoveDownClicked(source.index)"
+          title="Переместить вниз"
+        ></div>
+      </div>
     </div>
   </div>
-  <div class="footer"></div>
+  <div class="footer">
+    <button (click)="onApplyButtonClicked()">Применить</button>
+  </div>
 </div>

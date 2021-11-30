@@ -8,14 +8,14 @@
 
 @background-color: #2F343F;
 @font-color: @color--gray;
-@border-radius: 5px;
 @base-background-color: #222;
 @darker-background-color: #111;
 @base-size: 1vmax;
+@border-radius: @base-size*.25;
 
 @transition-interval: .3s;
 .rounded {
-  border-radius: 5px;
+  border-radius: @border-radius;
 }
 .shadowed {
   box-shadow: #00000055 0 0 10px;
@@ -61,4 +61,48 @@ body, html {
   border: none;
   margin: 0;
   padding: 0;
+}
+
+.widget__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: auto;
+}
+input, button, .button {
+  outline: none;
+  background-color: @darker-background-color;
+  border: 1px solid @color--dark;
+  border-radius: @border-radius;
+  color: @color--gray;
+  font-family: arial,sans-serif;
+  font-size: @base-size;
+  line-height: @base-size*2;
+  height: @base-size*2;
+  width: auto;//width: @base-size*2;
+  //text-indent: @base-size*.5;
+  transition: all @transition-interval;
+  box-shadow: none;
+}
+button, .button {
+  cursor: pointer;
+}
+input {
+  text-indent: @base-size*.3;
+}
+input:hover, button:hover, .button:hover {
+  border-color: @color--blue;
+}
+input:focus, button:active, .button:active {
+  border-color: @color--light-blue;
+  background-color: @color--dark;
+  color: @color--gray;
+}
+input:disabled, button:disabled, .button:disabled {
+  border-color: @background-color;
+  background-color: @color--dark;
+  color: @color--blue;
+  user-select: none;
 }
