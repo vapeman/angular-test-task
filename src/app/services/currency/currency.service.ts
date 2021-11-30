@@ -88,7 +88,7 @@ export class CurrencyService {
 
   public polling(intervalValue: number): Observable<Currencies | null | string> {
     return new Observable<Currencies | null | string>(subscriber => {
-      interval(intervalValue).subscribe({
+      let intervalSubscription = interval(intervalValue).subscribe({
         next: () => {
           subscriber.next('update');
           this.getData().subscribe(
@@ -98,6 +98,9 @@ export class CurrencyService {
           );
         }
       });
+      return function unsubscribe() {
+        intervalSubscription.unsubscribe();
+      };
     })
   }
 
