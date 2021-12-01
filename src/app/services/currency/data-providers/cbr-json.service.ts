@@ -7,6 +7,7 @@ import { CurrencyInterface } from "../../../interfaces/currency/currency-interfa
 import { QuotesInterface } from "../../../interfaces/currency/quotes-interface";
 import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
 
+import { AbstractCurrencyDataProvider } from "../currency.service";
 
 interface CurrencyObjectInterface {
   [currencyCode: string]: {
@@ -31,27 +32,18 @@ interface InputDataInterface {
 @Injectable({
   providedIn: 'root'
 })
-export class CbrJsonService {
+export class CbrJsonService extends AbstractCurrencyDataProvider {
 
-  constructor(private http: HttpClient) { }
+  constructor(protected http: HttpClient) { super(); }
 
-  private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_json.js";
-  private readonly sourceName: string = "CBR-DAILY-JSON";
-
-  public getInfo(): CurrencySourceMetadataInterface {
-    return {name: this.sourceName, url: this.sourceUrl, index: 0}
-  }
+  protected readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_json.js";
+  protected readonly sourceName: string = "CBR-DAILY-JSON";
 
   public getData(): Observable<QuotesInterface> {
-    return new Observable<QuotesInterface>(subscriber => {
-      this.http.get<InputDataInterface>(this.sourceUrl).subscribe({
-        next: (data) => {subscriber.next(this.formatData(data));},
-        error: (msg) => {subscriber.error(msg);}
-      })
-    });
+    return this.getAndFormatData<InputDataInterface>();
   }
 
-  private formatData(data: InputDataInterface): QuotesInterface {
+  protected formatData<InputDataInterface>(data: InputDataInterface): QuotesInterface {
     let quotes: {[currencyCode: string]: CurrencyInterface} = {};
     for (const key in data.Valute) {
       Object.assign(quotes, {
