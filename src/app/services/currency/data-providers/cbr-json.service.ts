@@ -3,10 +3,12 @@ import { HttpClient } from "@angular/common/http";
 
 import { Observable } from "rxjs";
 
-import { Currencies, Currency, SourceInfo } from "../currency.service";
+import { CurrencyInterface } from "../../../interfaces/currency/currency-interface";
+import { QuotesInterface } from "../../../interfaces/currency/quotes-interface";
+import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
 
 
-interface QuoteObject {
+interface CurrencyObjectInterface {
   [currencyCode: string]: {
     readonly ID: string
     readonly NumCode: number
@@ -18,12 +20,12 @@ interface QuoteObject {
   }
 }
 
-interface InputData {
+interface InputDataInterface {
   Date: string
   PreviousDate: string
   PreviousURL: string
   Timestamp: string
-  Valute: QuoteObject[]
+  Valute: CurrencyObjectInterface[]
 }
 
 @Injectable({
@@ -36,21 +38,21 @@ export class CbrJsonService {
   private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_json.js";
   private readonly sourceName: string = "CBR-DAILY-JSON";
 
-  public getInfo(): SourceInfo {
+  public getInfo(): CurrencySourceMetadataInterface {
     return {name: this.sourceName, url: this.sourceUrl, index: 0}
   }
 
-  public getData(): Observable<Currencies> {
-    return new Observable<Currencies>(subscriber => {
-      this.http.get<InputData>(this.sourceUrl).subscribe({
+  public getData(): Observable<QuotesInterface> {
+    return new Observable<QuotesInterface>(subscriber => {
+      this.http.get<InputDataInterface>(this.sourceUrl).subscribe({
         next: (data) => {subscriber.next(this.formatData(data));},
         error: (msg) => {subscriber.error(msg);}
       })
     });
   }
 
-  private formatData(data: InputData): Currencies {
-    let quotes: {[currencyCode: string]: Currency} = {};
+  private formatData(data: InputDataInterface): QuotesInterface {
+    let quotes: {[currencyCode: string]: CurrencyInterface} = {};
     for (const key in data.Valute) {
       Object.assign(quotes, {
         [key]: {

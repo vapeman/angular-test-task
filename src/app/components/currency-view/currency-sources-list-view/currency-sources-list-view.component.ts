@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {SourceInfo} from "../../../services/currency/currency.service";
+
+import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
 
 @Component({
   selector: 'app-currency-sources-list-view',
@@ -10,21 +11,21 @@ export class CurrencySourcesListViewComponent implements OnInit {
 
   constructor() { }
 
-  @Input() set sources(list: SourceInfo[]) {
+  @Input() set sources(list: CurrencySourceMetadataInterface[]) {
     this._sources = [];
     for(let item of list)
       this._sources.push(Object.assign({}, item));
     this.updateSortedSources();
   }
   @Output() closeEvent = new EventEmitter<void>();
-  @Output() applyEvent = new EventEmitter<SourceInfo[]>();
+  @Output() applyEvent = new EventEmitter<CurrencySourceMetadataInterface[]>();
 
-  public get sources(): SourceInfo[] {
+  public get sources(): CurrencySourceMetadataInterface[] {
     return this._sources;
   }
-  private _sources: SourceInfo[] = []
+  private _sources: CurrencySourceMetadataInterface[] = []
 
-  public sortedSources: SourceInfo[] = []
+  public sortedSources: CurrencySourceMetadataInterface[] = []
 
   ngOnInit(): void {
   }
@@ -57,7 +58,7 @@ export class CurrencySourcesListViewComponent implements OnInit {
   }
 
   private updateSortedSources() {
-    this.sortedSources = [...this._sources].sort((a: SourceInfo, b: SourceInfo) => a.index - b.index);
+    this.sortedSources = [...this._sources].sort((a, b) => a.index - b.index);
   }
 
   public onCloseButtonClicked() {

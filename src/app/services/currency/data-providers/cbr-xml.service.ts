@@ -5,10 +5,12 @@ import { Observable } from "rxjs";
 
 import { NgxXml2jsonService } from "ngx-xml2json";
 
-import { Currencies, Currency, SourceInfo } from "../currency.service";
+import { CurrencyInterface } from "../../../interfaces/currency/currency-interface";
+import { QuotesInterface } from "../../../interfaces/currency/quotes-interface";
+import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
 
 
-interface Valute {
+interface ValuteInterface {
   '@attributes' : {
     ID: string
   }
@@ -18,13 +20,13 @@ interface Valute {
   NumCode: string
   Value: string
 }
-interface InputData {
+interface InputDataInterface {
   ValCurs: {
     '@attributes': {
       Date: string,
       name: string
     }
-    Valute: Valute[]
+    Valute: ValuteInterface[]
   }
 }
 
@@ -39,16 +41,16 @@ export class CbrXmlService {
   private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
   private readonly sourceName: string = "CBR-DAILY-XML";
 
-  public getInfo(): SourceInfo {
+  public getInfo(): CurrencySourceMetadataInterface {
     return {name: this.sourceName, url: this.sourceUrl, index: 0}
   }
 
-  public getData(): Observable<Currencies> {
-    return new Observable<Currencies>(subscriber => {
+  public getData(): Observable<QuotesInterface> {
+    return new Observable<QuotesInterface>(subscriber => {
       this.http.get(this.sourceUrl, {observe: 'body', responseType: 'text'}).subscribe({
         next: (data) => {
-          const obj: InputData = this.parseData(data) as InputData;
-          const formattedData: Currencies = this.formatData(obj);
+          const obj: InputDataInterface = this.parseData(data) as InputDataInterface;
+          const formattedData: QuotesInterface = this.formatData(obj);
           subscriber.next(formattedData);
         },
         error: (msg) => {subscriber.error(msg);}
@@ -60,8 +62,8 @@ export class CbrXmlService {
     const xml = parser.parseFromString(data, 'text/xml');
     return this.xmlParserService.xmlToJson(xml);
   }
-  private formatData(data: InputData): Currencies {
-    let quotes: {[currencyCode: string]: Currency} = {};
+  private formatData(data: InputDataInterface): QuotesInterface {
+    let quotes: {[currencyCode: string]: CurrencyInterface} = {};
     for(const currency of data.ValCurs.Valute) {
       Object.assign(quotes, {
         [currency.CharCode]: {

@@ -1,8 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { animate, style, transition, trigger } from "@angular/animations";
 
-import { CurrencyService, Currencies, Currency, SourceInfo } from "../../services/currency/currency.service";
 import { Subscription } from "rxjs";
-import {animate, style, transition, trigger} from "@angular/animations";
+
+import { CurrencyService  } from "../../services/currency/currency.service";
+import { QuotesInterface } from "../../interfaces/currency/quotes-interface";
+import { CurrencyInterface } from "../../interfaces/currency/currency-interface";
+import { CurrencySourceMetadataInterface } from "../../interfaces/currency/currency-source-metadata-interface";
+
 
 @Component({
   selector: 'app-currency-view',
@@ -38,14 +43,14 @@ export class CurrencyViewComponent implements OnInit {
   public currencyTimestamp: number = 0
   public message: string = ''
 
-  private data: Currencies | undefined = undefined
+  private data: QuotesInterface | undefined = undefined
   public valueUpdatedAt: string = '---'
   public dataUpdatedAt: string = '---'
   public sourceName: string = ''
   public sourceUrl: string = ''
 
   public showSourceList: boolean = false
-  public sourceList: SourceInfo[] = []
+  public sourceList: CurrencySourceMetadataInterface[] = []
 
   private currencyPollingSubscription: Subscription | null = null
   public currencyPollingIsActive: boolean = false
@@ -72,7 +77,7 @@ export class CurrencyViewComponent implements OnInit {
     this.showSourceList = false;
   }
 
-  public onApplyNewCurrencySourcesOrder(data: SourceInfo[]) {
+  public onApplyNewCurrencySourcesOrder(data: CurrencySourceMetadataInterface[]) {
     this.showSourceList = false;
     this.stopPolling();
     if(!this.currencyService.setPollingOrder(data))
@@ -115,7 +120,7 @@ export class CurrencyViewComponent implements OnInit {
     });
   }
 
-  private onDataUpdated(data: Currencies | null) {
+  private onDataUpdated(data: QuotesInterface | null) {
     this.updating = false;
     this.message = '';
     if(data === null) {
@@ -148,7 +153,7 @@ export class CurrencyViewComponent implements OnInit {
     this.updateCurrencyValueChanging();
   }
 
-  private extractCurrency(currencyCharCode: string): Currency | null {
+  private extractCurrency(currencyCharCode: string): CurrencyInterface | null {
     if(this.data === undefined)
       return null;
     if(!this.data.quotes.hasOwnProperty(currencyCharCode))

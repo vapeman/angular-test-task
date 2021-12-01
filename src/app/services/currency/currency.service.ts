@@ -6,34 +6,9 @@ import { first, catchError } from "rxjs/operators";
 import { CbrJsonService } from "./data-providers/cbr-json.service";
 import { CbrXmlService } from "./data-providers/cbr-xml.service";
 
-
-export interface Currency {
-  charCode: string
-  name: string
-  nominal: number
-  value: number
-  previousValue: number | null
-}
-export interface Currencies {
-  sourceUrl: string
-  sourceName: string
-  timestamp: number
-  previousTimestamp: number | null
-  base: string
-  quotes: {
-    [currencyCode: string]: Currency
-  }
-}
-export interface SourceInfo {
-  name: string
-  url: string
-  index: number
-}
-interface CurrencyDataProvider {
-  getData: () => Observable<Currencies>
-  getInfo: () => SourceInfo
-}
-
+import { QuotesInterface } from "../../interfaces/currency/quotes-interface";
+import { CurrencySourceMetadataInterface } from "../../interfaces/currency/currency-source-metadata-interface";
+import { CurrencyDataProviderInterface } from "../../interfaces/currency/currency-data-provider-interface";
 
 @Injectable({
   providedIn: 'root'
@@ -47,11 +22,11 @@ export class CurrencyService {
     this.onInit();
   }
 
-  private readonly dataProviders: CurrencyDataProvider[] = [
+  private readonly dataProviders: CurrencyDataProviderInterface[] = [
     this.cbrXmlService,
     this.cbrJsonService,
   ]
-  private _dataSources: SourceInfo[] = []
+  private _dataSources: CurrencySourceMetadataInterface[] = []
 
   public get dataSources() {
     return this._dataSources;
@@ -65,7 +40,7 @@ export class CurrencyService {
     }
   }
 
-  public setPollingOrder(sources: SourceInfo[]): boolean {
+  public setPollingOrder(sources: CurrencySourceMetadataInterface[]): boolean {
     if(!this.verifySourcesUpdate(sources))
       return false;
     for(let i = 0; i < sources.length; i += 1)
@@ -73,7 +48,7 @@ export class CurrencyService {
     return true;
   }
 
-  private verifySourcesUpdate(sources: SourceInfo[]): boolean {
+  private verifySourcesUpdate(sources: CurrencySourceMetadataInterface[]): boolean {
     if(this._dataSources.length !== sources.length)
       return false;
     for(let i = 0; i < sources.length; i += 1) {
@@ -86,8 +61,8 @@ export class CurrencyService {
     return true;
   }
 
-  public polling(intervalValue: number): Observable<Currencies | null | string> {
-    return new Observable<Currencies | null | string>(subscriber => {
+  public polling(intervalValue: number): Observable<QuotesInterface | null | string> {
+    return new Observable<QuotesInterface | null | string>(subscriber => {
       let intervalSubscription = interval(intervalValue).subscribe({
         next: () => {
           subscriber.next('update');
@@ -104,7 +79,7 @@ export class CurrencyService {
     })
   }
 
-  public getData(): Observable<Currencies | null> {
+  public getData(): Observable<QuotesInterface | null> {
     // this.cbrXmlService.getData().subscribe(result => {console.log(result)});
     // return onErrorResumeNext(...this.dataProviders.map(dataProviderService => dataProviderService.getData())).pipe(
     return onErrorResumeNext(...this._dataSources.map(
