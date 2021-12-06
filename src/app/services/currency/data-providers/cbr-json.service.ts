@@ -5,9 +5,8 @@ import { Observable } from "rxjs";
 
 import { CurrencyInterface } from "../../../interfaces/currency/currency-interface";
 import { QuotesInterface } from "../../../interfaces/currency/quotes-interface";
-import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
 
-import { AbstractCurrencyDataProvider } from "../currency.service";
+import { AbstractCurrencyDataProvider } from "./abstract-currency-data-provider";
 
 interface CurrencyObjectInterface {
   [currencyCode: string]: {
