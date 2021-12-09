@@ -7,7 +7,8 @@ import { NgxXml2jsonService } from "ngx-xml2json";
 
 import { CurrencyInterface } from "../../../interfaces/currency/currency-interface";
 import { QuotesInterface } from "../../../interfaces/currency/quotes-interface";
-import { CurrencySourceMetadataInterface } from "../../../interfaces/currency/currency-source-metadata-interface";
+
+import { AbstractCurrencyDataProvider } from "./abstract-currency-data-provider";
 
 
 interface ValuteInterface {
@@ -34,37 +35,25 @@ interface InputDataInterface {
 @Injectable({
   providedIn: 'root'
 })
-export class CbrXmlService {
+export class CbrXmlService extends AbstractCurrencyDataProvider<string>{
 
-  constructor(private http: HttpClient, private xmlParserService: NgxXml2jsonService) { }
+  constructor(protected http: HttpClient, private xmlParserService: NgxXml2jsonService) { super(); }
 
-  private readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
-  private readonly sourceName: string = "CBR-DAILY-XML";
-
-  public getInfo(): CurrencySourceMetadataInterface {
-    return {name: this.sourceName, url: this.sourceUrl, index: 0}
-  }
+  protected readonly sourceUrl: string = "https://www.cbr-xml-daily.ru/daily_utf8.xml";
+  protected readonly sourceName: string = "CBR-DAILY-XML";
 
   public getData(): Observable<QuotesInterface> {
-    return new Observable<QuotesInterface>(subscriber => {
-      this.http.get(this.sourceUrl, {observe: 'body', responseType: 'text'}).subscribe({
-        next: (data) => {
-          const obj: InputDataInterface = this.parseData(data) as InputDataInterface;
-          const formattedData: QuotesInterface = this.formatData(obj);
-          subscriber.next(formattedData);
-        },
-        error: (msg) => {subscriber.error(msg);}
-      });
-    });
+    return this.getAndFormatData();
   }
   private parseData(data: string): Object {
     const parser = new DOMParser();
     const xml = parser.parseFromString(data, 'text/xml');
     return this.xmlParserService.xmlToJson(xml);
   }
-  private formatData(data: InputDataInterface): QuotesInterface {
+  protected formatData(data: string): QuotesInterface {
+    const parsedData = this.parseData(data) as InputDataInterface;
     let quotes: {[currencyCode: string]: CurrencyInterface} = {};
-    for(const currency of data.ValCurs.Valute) {
+    for(const currency of parsedData.ValCurs.Valute) {
       Object.assign(quotes, {
         [currency.CharCode]: {
           charCode: currency.CharCode,
@@ -75,7 +64,7 @@ export class CbrXmlService {
         }
       });
     }
-    const dateParts = data.ValCurs["@attributes"].Date.split('.');
+    const dateParts = parsedData.ValCurs["@attributes"].Date.split('.');
     const date = new Date(parseInt(dateParts[2], 10),
                    parseInt(dateParts[1], 10) - 1,
                           parseInt(dateParts[0], 10));
