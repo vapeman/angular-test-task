@@ -31,7 +31,7 @@ interface InputDataInterface {
 @Injectable({
   providedIn: 'root'
 })
-export class CbrJsonService extends AbstractCurrencyDataProvider {
+export class CbrJsonService extends AbstractCurrencyDataProvider<InputDataInterface> {
 
   constructor(protected http: HttpClient) { super(); }
 
@@ -39,10 +39,10 @@ export class CbrJsonService extends AbstractCurrencyDataProvider {
   protected readonly sourceName: string = "CBR-DAILY-JSON";
 
   public getData(): Observable<QuotesInterface> {
-    return this.getAndFormatData<InputDataInterface>();
+    return this.getAndFormatData();
   }
 
-  protected formatData<InputDataInterface>(data: InputDataInterface): QuotesInterface {
+  protected formatData(data: InputDataInterface): QuotesInterface {
     let quotes: {[currencyCode: string]: CurrencyInterface} = {};
     for (const key in data.Valute) {
       Object.assign(quotes, {
